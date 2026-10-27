@@ -48,9 +48,18 @@ def tracked_width(draw: ImageDraw.ImageDraw, text: str, fnt, tracking: float) ->
 
 
 def draw_tracked(draw, pos, text, fnt, fill, tracking=0.0, anchor="la"):
+    """Teks dengan letter-spacing manual (PIL nggak punya tracking).
+
+    Anchor cuma dua sumbu: 'l'/'m'/'r' buat horizontal. Sebelumnya 'ra'
+    diabaikan, jadi wordmark polaroid digambar mulai x=1100 dan kepotong
+    keluar kanvas — kebaca 'mayb'.
+    """
     x, y = pos
+    width = tracked_width(draw, text, fnt, tracking)
     if anchor.startswith("m"):
-        x -= tracked_width(draw, text, fnt, tracking) / 2
+        x -= width / 2
+    elif anchor.startswith("r"):
+        x -= width
     for ch in text:
         draw.text((x, y), ch, font=fnt, fill=fill)
         x += draw.textlength(ch, font=fnt) + tracking
@@ -107,15 +116,18 @@ def slot_hairlines(deco: ImageDraw.ImageDraw, slots: list[dict], color, width=3,
 # ---------------------------------------------------------------------------
 
 def strip_slots() -> list[dict]:
+    # 4 slot @740 + 3 jeda @40 = 3080, berakhir di y=3260.
+    # Nyisain 74px ke garis caption (3334) — sebelumnya cuma 4px, garisnya
+    # nempel banget ke foto terakhir kayak noda.
     return [
-        {"index": i + 1, "x": 100, "y": 180 + i * 800, "width": 1000, "height": 750, "radius": 0}
+        {"index": i + 1, "x": 100, "y": 180 + i * 780, "width": 1000, "height": 740, "radius": 0}
         for i in range(4)
     ]
 
 
 def trio_slots() -> list[dict]:
     return [
-        {"index": i + 1, "x": 100, "y": 200 + i * 840, "width": 1000, "height": 780, "radius": 0}
+        {"index": i + 1, "x": 100, "y": 200 + i * 820, "width": 1000, "height": 780, "radius": 0}
         for i in range(3)
     ]
 
@@ -126,6 +138,7 @@ FRAMES: list[dict] = [
         "title": "Honey Classic",
         "tagline": "Empat potret, satu kertas madu.",
         "type": "strip",
+        "akses": "bebas",
         "categoryLabel": "Classic 4-Cut",
         "canvasWidth": 1200,
         "canvasHeight": 3600,
@@ -148,6 +161,7 @@ FRAMES: list[dict] = [
         "title": "Midnight Seoul",
         "tagline": "Hitam pekat ala bilik foto Seoul.",
         "type": "strip",
+        "akses": "bebas",
         "categoryLabel": "Classic 4-Cut",
         "canvasWidth": 1200,
         "canvasHeight": 3600,
@@ -170,6 +184,7 @@ FRAMES: list[dict] = [
         "title": "Sage Morning",
         "tagline": "Hijau tenang buat pagi yang pelan.",
         "type": "strip",
+        "akses": "bebas",
         "categoryLabel": "Classic 4-Cut",
         "canvasWidth": 1200,
         "canvasHeight": 3600,
@@ -192,6 +207,7 @@ FRAMES: list[dict] = [
         "title": "Honey Trio",
         "tagline": "Tiga pose, ruang napas lebih lega.",
         "type": "strip",
+        "akses": "bebas",
         "categoryLabel": "Classic 3-Cut",
         "canvasWidth": 1200,
         "canvasHeight": 3000,
@@ -214,6 +230,7 @@ FRAMES: list[dict] = [
         "title": "Butter Grid",
         "tagline": "Empat jepretan jadi satu lembar 4R.",
         "type": "grid",
+        "akses": "bebas",
         "categoryLabel": "2x2 Grid",
         "canvasWidth": 2400,
         "canvasHeight": 3000,
@@ -241,6 +258,7 @@ FRAMES: list[dict] = [
         "title": "Polaroid Duo",
         "tagline": "Dua bingkai lebar, margin tebal.",
         "type": "polaroid",
+        "akses": "bebas",
         "categoryLabel": "Polaroid / Wide",
         "canvasWidth": 1200,
         "canvasHeight": 1800,
@@ -248,8 +266,8 @@ FRAMES: list[dict] = [
         "accentColor": "#C9A227",
         "inkColor": "#2A241E",
         "slots": [
-            {"index": 1, "x": 100, "y": 120, "width": 1000, "height": 680, "radius": 0},
-            {"index": 2, "x": 100, "y": 860, "width": 1000, "height": 680, "radius": 0},
+            {"index": 1, "x": 100, "y": 110, "width": 1000, "height": 660, "radius": 0},
+            {"index": 2, "x": 100, "y": 810, "width": 1000, "height": 660, "radius": 0},
         ],
         "captionBox": {"x": 100, "y": 1556, "width": 720, "height": 150, "align": "left"},
         "render": {
@@ -259,6 +277,59 @@ FRAMES: list[dict] = [
             "accent": "#C9A227",
             "wordmark": "maybee",
             "kicker": "POLAROID DUO",
+        },
+    },
+    {
+        "id": "linen-arch",
+        "title": "Linen Arch",
+        "tagline": "Serat kain, cahaya sore, satu strip.",
+        "type": "strip",
+        "akses": "koleksi",
+        "categoryLabel": "Classic 4-Cut",
+        "canvasWidth": 1200,
+        "canvasHeight": 3600,
+        "defaultBgColor": "#EFE9DE",
+        "accentColor": "#A8724A",
+        "inkColor": "#3A3227",
+        "slots": strip_slots(),
+        "captionBox": {"x": 100, "y": 3360, "width": 1000, "height": 140, "align": "left"},
+        "render": {
+            "style": "strip",
+            "paper": "#EFE9DE",
+            "ink": "#3A3227",
+            "accent": "#A8724A",
+            "wordmark": "maybee",
+            "kicker": "LINEN LIGHT, SLOW AFTERNOON",
+            "premium": True,
+        },
+    },
+    {
+        "id": "amber-grid",
+        "title": "Amber Room",
+        "tagline": "Empat potret di ruang amber, cetak 4R.",
+        "type": "grid",
+        "akses": "koleksi",
+        "categoryLabel": "2x2 Grid",
+        "canvasWidth": 2400,
+        "canvasHeight": 3000,
+        "defaultBgColor": "#F3E3C9",
+        "accentColor": "#B4763A",
+        "inkColor": "#2E2317",
+        "slots": [
+            {"index": 1, "x": 160, "y": 180, "width": 1000, "height": 1000, "radius": 8},
+            {"index": 2, "x": 1240, "y": 180, "width": 1000, "height": 1000, "radius": 8},
+            {"index": 3, "x": 160, "y": 1260, "width": 1000, "height": 1000, "radius": 8},
+            {"index": 4, "x": 1240, "y": 1260, "width": 1000, "height": 1000, "radius": 8},
+        ],
+        "captionBox": {"x": 160, "y": 2340, "width": 2080, "height": 160, "align": "left"},
+        "render": {
+            "style": "grid",
+            "paper": "#F3E3C9",
+            "ink": "#2E2317",
+            "accent": "#B4763A",
+            "wordmark": "maybee",
+            "kicker": "AMBER ROOM / 4R PRINT",
+            "premium": True,
         },
     },
 ]
@@ -296,8 +367,10 @@ def render_frame(spec: dict) -> Image.Image:
         f_kick = font("mono", 24)
         f_foot = font("mono", 21)
 
-        draw_tracked(d, (W / 2, 34), r["wordmark"], f_word, ink, tracking=1.5, anchor="ma")
-        draw_tracked(d, (W / 2, 142), r["kicker"], f_kick, muted, tracking=tracked["kicker"], anchor="ma")
+        # Georgia 96: descender 'y' jatuh 110px dari y-teks, jadi kicker
+        # digeser ke 146 supaya nggak ketabrak ekor huruf.
+        draw_tracked(d, (W / 2, 24), r["wordmark"], f_word, ink, tracking=1.5, anchor="ma")
+        draw_tracked(d, (W / 2, 146), r["kicker"], f_kick, muted, tracking=tracked["kicker"], anchor="ma")
 
         # garis tipis + tick sudut
         inset = 46
@@ -313,8 +386,8 @@ def render_frame(spec: dict) -> Image.Image:
 
         # pemisah area caption
         cap_y = spec["captionBox"]["y"]
-        d.line((100, cap_y - 26, 1100, cap_y - 26), fill=(*ink[:3], 46), width=2)
-        d.ellipse((1068, cap_y - 32, 1080, cap_y - 20), fill=accent)
+        d.line((100, cap_y - 26, 1064, cap_y - 26), fill=(*ink[:3], 46), width=2)
+        d.ellipse((1062, cap_y - 32, 1074, cap_y - 20), fill=accent)
 
         draw_tracked(d, (100, H - 64), "MAYBEE STUDIO", f_foot, muted, tracking=tracked["footer"])
         label = f"{W} × {H}"
@@ -327,19 +400,22 @@ def render_frame(spec: dict) -> Image.Image:
         f_giant = font("serif", 250)
         cap_y = spec["captionBox"]["y"]
 
-        draw_tracked(d, (160, 86), r["wordmark"], f_word, ink, tracking=1.0)
+        # y=56: descender 'y' berhenti di 166, di atas tepi slot (180).
+        draw_tracked(d, (160, 56), r["wordmark"], f_word, ink, tracking=1.0)
         label = r["kicker"]
         draw_tracked(d, (2240 - tracked_width(d, label, f_kick, 3.0), 126), label, f_kick, muted, tracking=3.0)
 
         d.rectangle((44, 44, W - 44, H - 44), outline=(*ink[:3], 26), width=2)
-        d.line((160, cap_y - 40, 2240, cap_y - 40), fill=(*ink[:3], 46), width=2)
-        d.ellipse((2216, cap_y - 48, 2232, cap_y - 32), fill=accent)
+        d.line((160, cap_y - 40, 2214, cap_y - 40), fill=(*ink[:3], 46), width=2)
+        d.ellipse((2212, cap_y - 48, 2228, cap_y - 32), fill=accent)
 
-        # wordmark raksasa sebagai watermark editorial
-        draw_tracked(d, (W / 2, 2660), r["wordmark"], f_giant, (*ink[:3], 26), tracking=2.0, anchor="ma")
+        # Watermark raksasa: 250px turun 284px dari y-teks, jadi ditaruh
+        # di 2600 (berhenti 2884) dan meta digeser ke 2916 — sebelumnya
+        # keduanya tabrakan di 2936-2944.
+        draw_tracked(d, (W / 2, 2600), r["wordmark"], f_giant, (*ink[:3], 26), tracking=2.0, anchor="ma")
         f_meta = font("mono", 22)
         meta = "PHOTOBOX · 300 DPI · PRINT READY"
-        draw_tracked(d, (W / 2, 2936), meta, f_meta, muted, tracking=3.2, anchor="ma")
+        draw_tracked(d, (W / 2, 2916), meta, f_meta, muted, tracking=3.2, anchor="ma")
 
     elif style == "polaroid":
         f_brand = font("serif", 48)
@@ -350,7 +426,19 @@ def render_frame(spec: dict) -> Image.Image:
         draw_tracked(d, (1100, 1672), r["wordmark"], f_brand, ink, tracking=0.5, anchor="ra")
         d.ellipse((1100 - tracked_width(d, r["wordmark"], f_brand, 0.5) - 16, 1694,
                    1100 - tracked_width(d, r["wordmark"], f_brand, 0.5) - 6, 1704), fill=accent)
-        draw_tracked(d, (100, 1762), "MAYBEE PHOTOBOX — POLAROID DUO", f_mono, muted, tracking=2.4)
+        # y=1740: descender mono 18 jatuh di 1754, masih di atas hairline (1770).
+        draw_tracked(d, (100, 1740), "MAYBEE PHOTOBOX — POLAROID DUO", f_mono, muted, tracking=2.4)
+
+    if r.get("premium"):
+        # Bingkai ganda + berlian sudut. Bukan hiasan acak: dua garis tipis
+        # adalah bahasa cetak (paspartout), dan berlian menandai bahwa bingkai
+        # ini bagian dari Koleksi — bukan gradien, bukan glow.
+        m = 26
+        d.rectangle((m, m, W - m, H - m), outline=(*ink[:3], 26), width=1)
+        d.rectangle((m + 9, m + 9, W - m - 9, H - m - 9), outline=(*ink[:3], 16), width=1)
+        dm = 7
+        for cx, cy in [(m, m), (W - m, m), (m, H - m), (W - m, H - m)]:
+            d.polygon([(cx, cy - dm), (cx + dm, cy), (cx, cy + dm), (cx - dm, cy)], fill=accent)
 
     # lubang slot SETELAH tekstur, SEBELUM dekorasi
     punch_slots(img, spec["slots"])
@@ -460,6 +548,42 @@ def make_samples() -> None:
     add_finish(img, 0.045).save(SAMPLES_DIR / "pose-6.jpg", quality=90)
 
 
+def validate(spec: dict) -> None:
+    """Jaga geometri bingkai: slot nggak boleh keluar kanvas, saling tumpuk,
+    atau mepet garis caption. Bug jenis ini nggak kelihatan di JSON — cuma
+    ketahuan pas hasil cetak keluar, jadi lebih baik gagal di sini."""
+    W, H = spec["canvasWidth"], spec["canvasHeight"]
+    slots = spec["slots"]
+    issues: list[str] = []
+
+    for s in slots:
+        if s["x"] < 0 or s["y"] < 0 or s["x"] + s["width"] > W or s["y"] + s["height"] > H:
+            issues.append(f"slot {s['index']} keluar kanvas")
+
+    boxes = [(s["x"], s["y"], s["x"] + s["width"], s["y"] + s["height"]) for s in slots]
+    for i in range(len(boxes)):
+        for j in range(i + 1, len(boxes)):
+            ax1, ay1, ax2, ay2 = boxes[i]
+            bx1, by1, bx2, by2 = boxes[j]
+            if ax1 < bx2 and bx1 < ax2 and ay1 < by2 and by1 < ay2:
+                issues.append(f"slot {i + 1} & {j + 1} tumpuk")
+
+    cap = spec["captionBox"]
+    divider = cap["y"] - 26
+    last_bottom = max(b["y"] + b["height"] for b in slots)
+    clear = divider - last_bottom
+    # garis caption harus di bawah foto terakhir, dengan napas minimal
+    min_clear = 24
+    if clear < min_clear:
+        issues.append(f"jarak garis caption cuma {clear}px (min {min_clear}px)")
+
+    if cap["x"] + cap["width"] > W or cap["y"] + cap["height"] > H:
+        issues.append("captionBox keluar kanvas")
+
+    if issues:
+        raise SystemExit(f"[geometri] {spec['id']}: " + "; ".join(issues))
+
+
 def main() -> None:
     FRAMES_DIR.mkdir(parents=True, exist_ok=True)
     SAMPLES_DIR.mkdir(parents=True, exist_ok=True)
@@ -467,6 +591,7 @@ def main() -> None:
 
     catalog = []
     for spec in FRAMES:
+        validate(spec)
         img = render_frame(spec)
         out = FRAMES_DIR / f"{spec['id']}.png"
         img.save(out, optimize=True)

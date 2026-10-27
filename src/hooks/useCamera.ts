@@ -5,6 +5,12 @@ export type CameraStatus = 'idle' | 'requesting' | 'ready' | 'denied' | 'unsuppo
 export interface CameraError {
   status: Exclude<CameraStatus, 'idle' | 'requesting' | 'ready'>
   message: string
+  /** Judul pendek biar user paham ini masalah apa, bukan cuma "gagal". */
+  title?: string
+  /** Langkah konkret yang bisa user apa sendiri. */
+  hint?: string
+  /** Instruksi per-browser, kalau perlu lebih spesifik dari hint. */
+  steps?: string[]
 }
 
 interface UseCamera {
@@ -21,16 +27,71 @@ interface UseCamera {
 
 function describe(err: unknown): CameraError {
   const name = err instanceof DOMException ? err.name : ''
+  const message = err instanceof Error ? err.message : ''
+  const insecure = typeof window !== 'undefined' && !window.isSecureContext
+  const host = typeof window !== 'undefined' ? window.location.hostname : ''
+  const isLan = /^(\d{1,3}\.){3}\d{1,3}$/.test(host) || host.endsWith('.local')
+
+  // Kasus paling sering di lapangan: buka dari HP lewat IP LAN (http://192.168.x.x:5173).
+  // getUserMedia nggak cuma gagal — di beberapa browser objeknya bahkan nggak ada.
+  // Jangan pernah bilang "izin ditolak" untuk kasus ini; user bakal muter-muter
+  // nyari tombol izin yang memang nggak pernah muncul.
+  if (insecure) {
+    return {
+      status: 'unsupported',
+      title: 'Halaman ini bukan koneksi aman',
+      message: isLan
+        ? `Kamu buka lewat ${host}, yang dianggap bukan koneksi aman. Browser cuma kasih kamera di HTTPS atau localhost.`
+        : 'Browser cuma mengizinkan kamera di HTTPS atau localhost, bukan di halaman http biasa.',
+      hint: 'Pakai localhost di komputer, atau akses lewat https. Sementara itu tetap bisa unggah foto.',
+    }
+  }
   if (name === 'NotAllowedError' || name === 'SecurityError') {
-    return { status: 'denied', message: 'Izin kamera ditolak. Izinkan akses kamera di setelan browser, lalu coba lagi.' }
+    // Chrome suka ngasih NotAllowedError padahal masalahnya nggak ada device
+    // atau diblokir kebijakan, bukan user nolak. Cek pesannya kalau ada.
+    if (/no device|not found|requested device/i.test(message)) {
+      return {
+        status: 'error',
+        title: 'Kamera tidak terdeteksi',
+        message: 'Browser nggak nemu kamera yang bisa dipakai di perangkat ini.',
+        hint: 'Cek kamera terpasang & tidak dinonaktifkan, lalu coba lagi. Atau unggah foto.',
+      }
+    }
+    return {
+      status: 'denied',
+      title: 'Izin kamera diblokir browser',
+      message: 'Browser memblokir akses kamera untuk maybee. Ini bukan halaman yang belum aman — koneksinya sudah oke, cuma izinnya dicabut.',
+      hint: 'Buka lagi izinnya lewat ikon di address bar, lalu muat ulang halaman.',
+      steps: [
+        'Klik ikon gembok / kamera di address bar (kiri URL).',
+        'Cari "Kamera" → ubah ke "Izinkan" (Allow).',
+        'Muat ulang halaman — jangan cuma klik Coba lagi.',
+        'iPhone? Setelan → Safari → Kamera → "Tanya". Di Chrome iOS: Setelan → Konten situs → Kamera.',
+      ],
+    }
   }
-  if (name === 'NotFoundError' || name === 'OverconstrainedError') {
-    return { status: 'error', message: 'Kamera nggak ketemu di perangkat ini. Pakai opsi unggah foto aja.' }
+  if (name === 'NotFoundError' || name === 'DevicesNotFoundError' || name === 'OverconstrainedError') {
+    return {
+      status: 'error',
+      title: 'Kamera tidak terdeteksi',
+      message: 'Kamera nggak ketemu di perangkat ini. Pakai opsi unggah foto aja.',
+      hint: 'Pastikan kamera terpasang dan tidak dipakai aplikasi lain.',
+    }
   }
-  if (name === 'NotReadableError') {
-    return { status: 'error', message: 'Kamera lagi dipakai aplikasi lain. Tutup aplikasi itu lalu muat ulang.' }
+  if (name === 'NotReadableError' || name === 'TrackStartError' || name === 'AbortError') {
+    return {
+      status: 'error',
+      title: 'Kamera sedang dipakai',
+      message: 'Kamera lagi dipakai aplikasi lain. Tutup aplikasi itu lalu muat ulang.',
+      hint: 'Tutup Zoom/Meet/Camera app, lalu klik Coba lagi.',
+    }
   }
-  return { status: 'error', message: 'Gagal menyalakan kamera. Coba muat ulang halaman.' }
+  return {
+    status: 'error',
+    title: 'Kamera gagal menyala',
+    message: 'Gagal menyalakan kamera. Coba muat ulang halaman.',
+    hint: 'Kalau tetap gagal, unggah foto dari galeri — hasilnya sama.',
+  }
 }
 
 export function useCamera(): UseCamera {
@@ -49,8 +110,25 @@ export function useCamera(): UseCamera {
 
   const start = useCallback(async () => {
     if (!navigator.mediaDevices?.getUserMedia) {
-      setStatus('unsupported')
-      setError({ status: 'unsupported', message: 'Browser ini belum mendukung kamera. Pakai Chrome/Safari terbaru atau unggah foto.' })
+      // Objeknya hilang bisa dua sebab: browser memang tua, ATAU halaman bukan
+      // secure context (http://IP-LAN). Jangan salah tuduh browser.
+      const insecure = typeof window !== 'undefined' && !window.isSecureContext
+      const described: CameraError = insecure
+        ? {
+            status: 'unsupported',
+            title: 'Halaman ini bukan koneksi aman',
+            message:
+              'Browser cuma mengizinkan kamera di HTTPS atau localhost. Halaman ini dibuka lewat http biasa, jadi kamera dimatikan.',
+            hint: 'Akses lewat https, atau buka di localhost. Sementara itu unggah foto tetap jalan.',
+          }
+        : {
+            status: 'unsupported',
+            title: 'Browser belum mendukung kamera',
+            message: 'Browser ini belum mendukung kamera. Pakai Chrome/Safari terbaru atau unggah foto.',
+            hint: 'Coba browser lain, atau unggah foto dari galeri.',
+          }
+      setStatus(described.status)
+      setError(described)
       return
     }
     setStatus('requesting')

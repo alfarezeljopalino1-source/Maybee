@@ -10,6 +10,7 @@ import {
   Download,
   HardDriveDownload,
   Loader2,
+  Lock,
   Volume2,
   VolumeX,
 } from 'lucide-react'
@@ -20,7 +21,7 @@ import { ReviewStage } from '../components/booth/ReviewStage'
 import { FrameStripPicker } from '../components/booth/FrameStripPicker'
 import { useCamera } from '../hooks/useCamera'
 import { useMultiShot } from '../hooks/useMultiShot'
-import { getFrame } from '../data/frames'
+import { getFrame, isFrameUnlocked } from '../data/frames'
 import { downloadBlob, exportStrip, formatStamp, loadImage, type FilterId, type PhotoSource } from '../lib/canvas'
 import { isMuted, playChime, setMuted, unlockAudio } from '../lib/audio'
 import { recallCaption, saveLocalStrip } from '../lib/localGallery'
@@ -36,6 +37,9 @@ export function Booth() {
   const frame = useMemo(() => getFrame(params.get('frame') ?? undefined) ?? getFrame('honey-classic')!, [params])
   const camera = useCamera()
   const { user, cloudReady } = useAuth()
+  // Bingkai Koleksi tetap bisa DILIHAT di booth, tapi jepretan dikunci sampai
+  // ada akun. Gate-nya di sini, bukan redirect: orang bisa lihat dulu.
+  const locked = !isFrameUnlocked(frame, Boolean(user))
 
   const [stage, setStage] = useState<Stage>('setup')
   const [photos, setPhotos] = useState<(string | null)[]>(() => Array(frame.photoCount).fill(null))
@@ -232,10 +236,13 @@ export function Booth() {
     }
   }
 
+  // Galeri lokal = arsip di browser, bukan file cetak. Simpan WebP 1600px
+  // (~10x lebih kecil dari PNG 300 DPI) supaya kuota IndexedDB nggak jebol:
+  // 40 strip PNG @1.1MB = 44MB, sedangkan WebP @~140KB = 5.6MB.
   const handleSaveLocal = async () => {
     setBusy('local')
     try {
-      const blob = await renderBlob('png')
+      const blob = await renderBlob('webp')
       await saveLocalStrip({
         id: crypto.randomUUID(),
         frameId: frame.id,
@@ -321,6 +328,54 @@ export function Booth() {
           )}
 
           <div className="pt-8">
+            {locked ? (
+              <div className="mx-auto max-w-lg">
+                <div className="relative overflow-hidden rounded-2xl border border-line bg-milk p-7 shadow-[0_30px_60px_-48px_rgba(28,25,23,0.4)]">
+                  <span className="absolute right-5 top-5 inline-flex items-center gap-1.5 rounded-full bg-espresso px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-cream">
+                    <Lock size={10} /> koleksi
+                  </span>
+
+                  <p className="kicker">{frame.categoryLabel}</p>
+                  <h1 className="mt-2 max-w-[20ch] font-serif text-[2.1rem] leading-[1.05] tracking-[-0.02em] text-espresso">
+                    {frame.title} butuh <span className="italic">akun</span>.
+                  </h1>
+                  <p className="mt-3 text-[13.5px] leading-relaxed text-stone">
+                    Bukan paket berbayar — maybee nggak jual bingkai. Bingkai Koleksi cuma butuh
+                    kamu punya arsip, supaya strip-nya punya tempat pulang.
+                  </p>
+
+                  <ul className="mt-5 space-y-2 border-t border-line pt-4 text-[12.5px] text-stone">
+                    {[
+                      'Gratis, tanpa kartu kredit',
+                      'Bingkai bebas tetap bisa dipakai tanpa masuk',
+                      'Foto tetap diproses di browser kamu',
+                    ].map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <Check size={14} className="mt-0.5 shrink-0 text-espresso" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-6 flex flex-col gap-2 sm:flex-row">
+                    <Link
+                      to={`/masuk?mode=masuk&next=${frame.id}`}
+                      className="btn btn-dark flex-1 justify-center !py-3"
+                    >
+                      Masuk atau daftar
+                      <ArrowRight size={15} />
+                    </Link>
+                    <Link to="/#bingkai" className="btn btn-ghost flex-1 justify-center !py-3">
+                      Lihat bingkai bebas
+                    </Link>
+                  </div>
+
+                  <p className="mt-4 font-mono text-[9.5px] uppercase leading-relaxed tracking-[0.1em] text-stone-soft">
+                    udah punya akun? tinggal masuk, bingkai ini kebuka otomatis.
+                  </p>
+                </div>
+              </div>
+            ) : (
             <AnimatePresence mode="wait">
               {stage === 'setup' && (
                 <motion.div
@@ -568,6 +623,7 @@ export function Booth() {
                 </motion.div>
               )}
             </AnimatePresence>
+            )}
           </div>
         </div>
       </main>

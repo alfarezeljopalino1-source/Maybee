@@ -221,7 +221,7 @@ export function Gallery() {
           {body}
 
           {tab === 'lokal' && local.length > 0 && (
-            <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-7 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
               {local.map((strip, i) => (
                 <motion.article
                   key={strip.id}
@@ -230,11 +230,11 @@ export function Gallery() {
                   transition={{ delay: Math.min(i * 0.04, 0.3), duration: 0.35 }}
                   className="group overflow-hidden rounded-xl border border-line bg-milk transition hover:border-line-strong"
                 >
-                  <div className="flex justify-center bg-[#F4EFE4] px-4 py-5">
+                  <div className="flex items-center justify-center bg-[#F4EFE4] px-3 py-4 sm:px-4 sm:py-5">
                     <img
                       src={urls[strip.id]}
                       alt={`Strip ${strip.frameTitle}`}
-                      className="max-h-[340px] w-auto rounded-[2px] shadow-[0_14px_28px_-14px_rgba(28,25,23,0.4)]"
+                      className="max-h-[260px] w-auto max-w-full rounded-[2px] shadow-[0_14px_28px_-14px_rgba(28,25,23,0.4)] sm:max-h-[340px]"
                       loading="lazy"
                     />
                   </div>
@@ -278,7 +278,7 @@ export function Gallery() {
           )}
 
           {tab === 'akun' && user && cloud.length > 0 && (
-            <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-7 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
               {cloud.map((strip, i) => (
                 <motion.article
                   key={strip.id}
@@ -287,11 +287,11 @@ export function Gallery() {
                   transition={{ delay: Math.min(i * 0.04, 0.3), duration: 0.35 }}
                   className="overflow-hidden rounded-xl border border-line bg-milk transition hover:border-line-strong"
                 >
-                  <div className="flex justify-center bg-[#F4EFE4] px-4 py-5">
+                  <div className="flex items-center justify-center bg-[#F4EFE4] px-3 py-4 sm:px-4 sm:py-5">
                     <img
                       src={strip.image_url}
                       alt={`Strip ${strip.caption ?? ''}`}
-                      className="max-h-[340px] w-auto rounded-[2px] shadow-[0_14px_28px_-14px_rgba(28,25,23,0.4)]"
+                      className="max-h-[260px] w-auto max-w-full rounded-[2px] shadow-[0_14px_28px_-14px_rgba(28,25,23,0.4)] sm:max-h-[340px]"
                       loading="lazy"
                     />
                   </div>

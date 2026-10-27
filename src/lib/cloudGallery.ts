@@ -2,7 +2,11 @@ import { requireSupabase, STORAGE_BUCKET } from './supabase'
 import type { CloudStrip } from '../types'
 import { blobExtension } from './canvas'
 
-const MAX_EDGE = 1600
+/**
+ * 1600px sisi terpanjang bikin strip 4-cut (1:3) cuma 533px lebar — buram
+ * di layar retina. 2400px kasih 800px lebar, masih ~200KB di q0.8.
+ */
+const MAX_EDGE = 2400
 const WEBP_QUALITY = 0.8
 
 /**

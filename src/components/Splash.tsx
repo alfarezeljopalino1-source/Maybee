@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useCallback, useEffect, useState } from 'react'
 import { hasSeenSplash, markSplashSeen } from '../lib/localGallery'
 import { playShutter, unlockAudio } from '../lib/audio'
+import { DiamondMark } from './Logo'
 
 interface SplashProps {
   onDone: () => void
@@ -62,35 +63,15 @@ export function Splash({ onDone }: SplashProps) {
         </button>
 
         <div className="flex flex-col items-center gap-9 px-6">
-          {/* aperture */}
+          {/* mark "Honey Cell" — tiga sel bergaris, satu sel madu.
+              Sel madu menyala belakangan, pas "flash" jepretan. */}
           <motion.div
-            className="relative h-16 w-16"
-            initial={{ scale: 0.75, opacity: 0, rotate: -35 }}
-            animate={{ scale: 1, opacity: 1, rotate: 0 }}
-            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="text-espresso"
           >
-            <motion.span
-              className="absolute inset-0 rounded-full border border-espresso/25"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2.6, ease: 'linear', repeat: Infinity }}
-            />
-            <span className="absolute inset-[7px] rounded-full border border-espresso/15" />
-            {Array.from({ length: 6 }).map((_, i) => (
-              <motion.span
-                key={i}
-                className="absolute left-1/2 top-1/2 h-[26px] w-[1.5px] origin-bottom rounded-full bg-espresso/45"
-                style={{ rotate: `${i * 60}deg`, translateX: '-50%', translateY: '-100%' }}
-                initial={{ scaleY: 0 }}
-                animate={{ scaleY: 1 }}
-                transition={{ delay: 0.12 + i * 0.045, duration: 0.45, ease: 'easeOut' }}
-              />
-            ))}
-            <motion.span
-              className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-honey"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.42, type: 'spring', stiffness: 320, damping: 16 }}
-            />
+            <DiamondMark size={4.6} />
           </motion.div>
 
           <div className="flex flex-col items-center gap-3">
@@ -101,6 +82,10 @@ export function Splash({ onDone }: SplashProps) {
               transition={{ delay: 0.58, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             >
               maybee
+              <span
+                aria-hidden
+                className="ml-[0.1em] inline-block h-[0.17em] w-[0.17em] translate-y-[-0.52em] rounded-full bg-honey align-baseline"
+              />
             </motion.h1>
             <motion.p
               className="font-mono text-[10px] uppercase tracking-[0.28em] text-stone"

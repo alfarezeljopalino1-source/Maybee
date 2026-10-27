@@ -4,6 +4,7 @@
     "title": "Honey Classic",
     "tagline": "Empat potret, satu kertas madu.",
     "type": "strip",
+    "akses": "bebas",
     "categoryLabel": "Classic 4-Cut",
     "canvasWidth": 1200,
     "canvasHeight": 3600,
@@ -16,31 +17,31 @@
         "x": 100,
         "y": 180,
         "width": 1000,
-        "height": 750,
+        "height": 740,
         "radius": 0
       },
       {
         "index": 2,
         "x": 100,
-        "y": 980,
+        "y": 960,
         "width": 1000,
-        "height": 750,
+        "height": 740,
         "radius": 0
       },
       {
         "index": 3,
         "x": 100,
-        "y": 1780,
+        "y": 1740,
         "width": 1000,
-        "height": 750,
+        "height": 740,
         "radius": 0
       },
       {
         "index": 4,
         "x": 100,
-        "y": 2580,
+        "y": 2520,
         "width": 1000,
-        "height": 750,
+        "height": 740,
         "radius": 0
       }
     ],
@@ -59,6 +60,7 @@
     "title": "Midnight Seoul",
     "tagline": "Hitam pekat ala bilik foto Seoul.",
     "type": "strip",
+    "akses": "bebas",
     "categoryLabel": "Classic 4-Cut",
     "canvasWidth": 1200,
     "canvasHeight": 3600,
@@ -71,31 +73,31 @@
         "x": 100,
         "y": 180,
         "width": 1000,
-        "height": 750,
+        "height": 740,
         "radius": 0
       },
       {
         "index": 2,
         "x": 100,
-        "y": 980,
+        "y": 960,
         "width": 1000,
-        "height": 750,
+        "height": 740,
         "radius": 0
       },
       {
         "index": 3,
         "x": 100,
-        "y": 1780,
+        "y": 1740,
         "width": 1000,
-        "height": 750,
+        "height": 740,
         "radius": 0
       },
       {
         "index": 4,
         "x": 100,
-        "y": 2580,
+        "y": 2520,
         "width": 1000,
-        "height": 750,
+        "height": 740,
         "radius": 0
       }
     ],
@@ -114,6 +116,7 @@
     "title": "Sage Morning",
     "tagline": "Hijau tenang buat pagi yang pelan.",
     "type": "strip",
+    "akses": "bebas",
     "categoryLabel": "Classic 4-Cut",
     "canvasWidth": 1200,
     "canvasHeight": 3600,
@@ -126,31 +129,31 @@
         "x": 100,
         "y": 180,
         "width": 1000,
-        "height": 750,
+        "height": 740,
         "radius": 0
       },
       {
         "index": 2,
         "x": 100,
-        "y": 980,
+        "y": 960,
         "width": 1000,
-        "height": 750,
+        "height": 740,
         "radius": 0
       },
       {
         "index": 3,
         "x": 100,
-        "y": 1780,
+        "y": 1740,
         "width": 1000,
-        "height": 750,
+        "height": 740,
         "radius": 0
       },
       {
         "index": 4,
         "x": 100,
-        "y": 2580,
+        "y": 2520,
         "width": 1000,
-        "height": 750,
+        "height": 740,
         "radius": 0
       }
     ],
@@ -169,6 +172,7 @@
     "title": "Honey Trio",
     "tagline": "Tiga pose, ruang napas lebih lega.",
     "type": "strip",
+    "akses": "bebas",
     "categoryLabel": "Classic 3-Cut",
     "canvasWidth": 1200,
     "canvasHeight": 3000,
@@ -187,7 +191,7 @@
       {
         "index": 2,
         "x": 100,
-        "y": 1040,
+        "y": 1020,
         "width": 1000,
         "height": 780,
         "radius": 0
@@ -195,7 +199,7 @@
       {
         "index": 3,
         "x": 100,
-        "y": 1880,
+        "y": 1840,
         "width": 1000,
         "height": 780,
         "radius": 0
@@ -216,6 +220,7 @@
     "title": "Butter Grid",
     "tagline": "Empat jepretan jadi satu lembar 4R.",
     "type": "grid",
+    "akses": "bebas",
     "categoryLabel": "2x2 Grid",
     "canvasWidth": 2400,
     "canvasHeight": 3000,
@@ -271,6 +276,7 @@
     "title": "Polaroid Duo",
     "tagline": "Dua bingkai lebar, margin tebal.",
     "type": "polaroid",
+    "akses": "bebas",
     "categoryLabel": "Polaroid / Wide",
     "canvasWidth": 1200,
     "canvasHeight": 1800,
@@ -281,17 +287,17 @@
       {
         "index": 1,
         "x": 100,
-        "y": 120,
+        "y": 110,
         "width": 1000,
-        "height": 680,
+        "height": 660,
         "radius": 0
       },
       {
         "index": 2,
         "x": 100,
-        "y": 860,
+        "y": 810,
         "width": 1000,
-        "height": 680,
+        "height": 660,
         "radius": 0
       }
     ],
@@ -304,5 +310,117 @@
     },
     "overlayUrl": "/frames/polaroid-duo.png",
     "photoCount": 2
+  },
+  {
+    "id": "linen-arch",
+    "title": "Linen Arch",
+    "tagline": "Serat kain, cahaya sore, satu strip.",
+    "type": "strip",
+    "akses": "koleksi",
+    "categoryLabel": "Classic 4-Cut",
+    "canvasWidth": 1200,
+    "canvasHeight": 3600,
+    "defaultBgColor": "#EFE9DE",
+    "accentColor": "#A8724A",
+    "inkColor": "#3A3227",
+    "slots": [
+      {
+        "index": 1,
+        "x": 100,
+        "y": 180,
+        "width": 1000,
+        "height": 740,
+        "radius": 0
+      },
+      {
+        "index": 2,
+        "x": 100,
+        "y": 960,
+        "width": 1000,
+        "height": 740,
+        "radius": 0
+      },
+      {
+        "index": 3,
+        "x": 100,
+        "y": 1740,
+        "width": 1000,
+        "height": 740,
+        "radius": 0
+      },
+      {
+        "index": 4,
+        "x": 100,
+        "y": 2520,
+        "width": 1000,
+        "height": 740,
+        "radius": 0
+      }
+    ],
+    "captionBox": {
+      "x": 100,
+      "y": 3360,
+      "width": 1000,
+      "height": 140,
+      "align": "left"
+    },
+    "overlayUrl": "/frames/linen-arch.png",
+    "photoCount": 4
+  },
+  {
+    "id": "amber-grid",
+    "title": "Amber Room",
+    "tagline": "Empat potret di ruang amber, cetak 4R.",
+    "type": "grid",
+    "akses": "koleksi",
+    "categoryLabel": "2x2 Grid",
+    "canvasWidth": 2400,
+    "canvasHeight": 3000,
+    "defaultBgColor": "#F3E3C9",
+    "accentColor": "#B4763A",
+    "inkColor": "#2E2317",
+    "slots": [
+      {
+        "index": 1,
+        "x": 160,
+        "y": 180,
+        "width": 1000,
+        "height": 1000,
+        "radius": 8
+      },
+      {
+        "index": 2,
+        "x": 1240,
+        "y": 180,
+        "width": 1000,
+        "height": 1000,
+        "radius": 8
+      },
+      {
+        "index": 3,
+        "x": 160,
+        "y": 1260,
+        "width": 1000,
+        "height": 1000,
+        "radius": 8
+      },
+      {
+        "index": 4,
+        "x": 1240,
+        "y": 1260,
+        "width": 1000,
+        "height": 1000,
+        "radius": 8
+      }
+    ],
+    "captionBox": {
+      "x": 160,
+      "y": 2340,
+      "width": 2080,
+      "height": 160,
+      "align": "left"
+    },
+    "overlayUrl": "/frames/amber-grid.png",
+    "photoCount": 4
   }
 ]

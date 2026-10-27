@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Wordmark } from './Wordmark'
+import { Logo } from './Logo'
 
 export function SiteFooter() {
   const email = import.meta.env.VITE_CONTACT_EMAIL ?? 'hello@maybee.app'
@@ -9,7 +9,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
         <div className="flex flex-col justify-between gap-10 sm:flex-row">
           <div className="max-w-xs">
-            <Wordmark className="text-2xl text-espresso" />
+            <Logo className="text-2xl text-espresso" markSize={1.2} />
             <p className="mt-3 text-[13px] leading-relaxed text-stone">
               Sweet little photobox di browser kamu. Dibikin buat kenangan yang pengen dicetak, bukan
               cuma di-scroll.
@@ -49,7 +49,7 @@ export function SiteFooter() {
               <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-stone-soft">catatan</p>
               <ul className="mt-3 space-y-2 text-[13px] text-stone">
                 <li>Foto nggak diproses di server</li>
-                <li>Bingkai baru tiap bulan</li>
+                <li>Bingkai gratis, bukan paywall</li>
               </ul>
             </div>
           </div>

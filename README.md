@@ -61,8 +61,22 @@ Itu memang desainnya — biar bisa demo tanpa backend.
 3. **Authentication → URL Configuration**:
    - Site URL: `https://domain-kamu.com`
    - Redirect URLs: `https://domain-kamu.com/**`, `http://localhost:5173/**`
-4. **Authentication → Providers → Email**: aktifkan kalau mau magic link.
+4. **Authentication → Providers → Email**: aktifkan. Ini yang dipakai
+   email/password, magic link, dan reset password sekaligus.
+   - **Confirm email** nyala → setelah daftar, user dikirim tautan konfirmasi
+     (app sudah nampilin pesan "cek inbox").
+   - **Confirm email** mati → daftar langsung dapat sesi, enak buat demo.
+   - **Redirect URL reset password**: `https://domain-kamu.com/masuk?mode=reset`
+     (dan `http://localhost:5173/masuk?mode=reset` waktu lokal).
 5. Copy **anon public key** → taruh di `VITE_SUPABASE_ANON_KEY`.
+
+### Bingkai: bebas vs Koleksi
+
+Enam bingkai bertanda `akses: 'bebas'` dipakai tanpa akun. Dua bingkai
+`akses: 'koleksi'` cuma butuh login — **bukan berbayar**. Gate-nya ada di
+`Booth.tsx` dan tampil sebagai panel penjelasan, bukan redirect paksa.
+Kalau mau semua bingkai bebas, ubah kolom `akses` di tabel `frames`
+(atau `src/data/frames.json`) jadi `'bebas'`.
 
 Yang disimpan ke cloud cuma versi terkompresi (±150–250 KB, WebP, sisi terpanjang
 1600 px). File 300 DPI tetap cuma ada di perangkat user.

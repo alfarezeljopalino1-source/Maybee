@@ -1,15 +1,25 @@
 import { motion } from 'framer-motion'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Camera, Download, Frame as FrameIcon, ShieldCheck, Sparkles } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Camera, Download, Frame as FrameIcon, ShieldCheck, Sparkles } from 'lucide-react'
 import { SiteHeader } from '../components/SiteHeader'
 import { SiteFooter } from '../components/SiteFooter'
 import { FrameCard } from '../components/FrameCard'
 import { FrameTrip } from '../components/FrameTrip'
-import { categories, frames, getFrame } from '../data/frames'
+import { categories, collectionFrames, freeFrames, frames, getFrame } from '../data/frames'
 
-const heroFrame = getFrame('honey-classic')!
-const heroSticker = getFrame('polaroid-duo')!
+const specimen = [
+  { id: 'honey-classic', note: 'strip 4-cut' },
+  { id: 'butter-grid', note: 'grid 2×2' },
+  { id: 'polaroid-duo', note: 'polaroid' },
+]
+
+const colophon = [
+  { term: 'jepretan', value: '4 slot' },
+  { term: 'resolusi', value: '300 dpi' },
+  { term: 'filter', value: '4 analog' },
+  { term: 'biaya', value: 'gratis' },
+]
 
 const steps = [
   {
@@ -29,10 +39,21 @@ const steps = [
   },
 ]
 
+const ease = [0.22, 1, 0.36, 1] as const
+
+const rise = (delay = 0) => ({
+  initial: { opacity: 0, y: 14 },
+  animate: { opacity: 1, y: 0 },
+  transition: { delay, duration: 0.7, ease },
+})
+
 export function Landing() {
   const [active, setActive] = useState('Semua')
   const filtered = useMemo(
-    () => (active === 'Semua' ? frames : frames.filter((f) => f.categoryLabel === active)),
+    () =>
+      active === 'Semua'
+        ? freeFrames
+        : freeFrames.filter((f) => f.categoryLabel === active),
     [active],
   )
 
@@ -40,120 +61,175 @@ export function Landing() {
     <div className="min-h-screen bg-cream">
       <SiteHeader />
 
-      {/* HERO */}
-      <section className="relative overflow-hidden border-b border-line">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-5 pb-16 pt-12 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:pb-24 lg:pt-20">
-          <div className="relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="inline-flex items-center gap-2 rounded-full border border-line-strong bg-milk px-3 py-1.5"
-            >
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-honey opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-honey" />
-              </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-stone">
-                tanpa unduh aplikasi
-              </span>
-            </motion.div>
+      {/* ── HERO ─────────────────────────────────────────────────────────
+          Teks yang jadi panggung. Mockup strip diturunkan jadi spesimen
+          kecil di kaki halaman, bukan rebutan perhatian sama headline. */}
+      <section className="border-b border-line">
+        <div className="mx-auto max-w-5xl px-5 sm:px-8">
+          {/* masthead */}
+          <motion.div
+            {...rise(0)}
+            className="flex items-baseline justify-between gap-4 border-b border-line py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-soft"
+          >
+            <span className="text-stone">photobox · browser only</span>
+            <span className="hidden sm:inline">est. 2026 — indonesia</span>
+          </motion.div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.08, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-6 font-serif text-[2.9rem] leading-[0.98] tracking-[-0.02em] text-espresso sm:text-[4.2rem] lg:text-[4.6rem]"
-            >
+          <div className="pb-14 pt-12 sm:pb-16 sm:pt-16 lg:pb-20 lg:pt-20">
+            <motion.p {...rise(0.04)} className="kicker">
+              foto strip, tanpa antre
+            </motion.p>
+
+            <motion.h1 {...rise(0.1)} className="display mt-5 max-w-[19ch]">
               sweet memories,
               <br />
               <span className="italic text-stone">one strip</span> at a time.
             </motion.h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.18, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-6 max-w-md text-[15px] leading-relaxed text-stone sm:text-base"
-            >
-              Photobox instan langsung dari browser kamu. Pilih bingkai, pose 4 kali,
-              simpan atau unduh gratis — hasilnya siap cetak 300 DPI.
-            </motion.p>
+            {/* Dua kolom: paragraf pembuka + kolofon. Rasio sengaja nggak 50/50. */}
+            <div className="mt-10 grid grid-cols-1 gap-10 border-t border-line pt-9 sm:mt-12 lg:grid-cols-12 lg:gap-8">
+              <motion.div {...rise(0.18)} className="lg:col-span-6">
+                <p className="body-copy dropcap text-[15px] leading-[1.72]">
+                  Photobox di browser kamu. Pilih bingkai, pose empat kali dengan hitungan
+                  mundur, lalu poles warnanya. Hasilnya file PNG 300 DPI yang siap dicetak —
+                  bukan screenshot burem.
+                </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.26, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-8 flex flex-wrap items-center gap-3"
-            >
-              <Link to="/booth" className="btn btn-dark">
-                Mulai sesi foto
-                <ArrowRight size={15} />
-              </Link>
-              <a href="#bingkai" className="btn btn-ghost">
-                Lihat katalog bingkai
-              </a>
-            </motion.div>
+                <div className="mt-7 flex flex-wrap items-center gap-3">
+                  <Link to="/booth" className="btn btn-dark">
+                    Mulai sesi foto
+                    <ArrowRight size={15} />
+                  </Link>
+                  <a href="#bingkai" className="btn btn-quiet border border-line-strong">
+                    Lihat katalog
+                  </a>
+                </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.42, duration: 0.6 }}
-              className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-line pt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-stone-soft"
-            >
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck size={13} /> foto nggak keluar dari browser
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Sparkles size={13} /> 4 filter analog
-              </span>
-            </motion.div>
+                <p className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[10px] uppercase tracking-[0.13em] text-stone-soft">
+                  <span className="flex items-center gap-1.5">
+                    <ShieldCheck size={12} /> foto tetap di gawai
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Sparkles size={12} /> tanpa akun
+                  </span>
+                </p>
+              </motion.div>
+
+              {/* kolofon — info teknis dirapatkan, bukan dipecah jadi 4 kartu */}
+              <motion.dl
+                {...rise(0.26)}
+                className="self-start border-t border-line pt-5 lg:col-span-4 lg:col-start-9 lg:border-t-0 lg:pt-0"
+              >
+                <p className="micro mb-3">ringkasan</p>
+                {colophon.map((row) => (
+                  <div
+                    key={row.term}
+                    className="flex items-baseline justify-between gap-4 border-b border-line py-2.5 last:border-b-0"
+                  >
+                    <dt className="font-mono text-[10px] uppercase tracking-[0.13em] text-stone-soft">
+                      {row.term}
+                    </dt>
+                    <dd className="font-serif text-[1.15rem] leading-none text-espresso">{row.value}</dd>
+                  </div>
+                ))}
+              </motion.dl>
+            </div>
           </div>
 
-          {/* mockup strip */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="relative mx-auto w-full max-w-[420px] lg:max-w-none"
-          >
-            <div className="absolute -inset-6 -z-10 rounded-[50%] bg-butter/50 blur-3xl" />
-            <div className="relative flex items-end justify-center gap-5 px-2">
-              <div className="w-[54%] shrink-0">
-                <div className="tilt-strip origin-bottom drop-shadow-[0_26px_36px_rgba(28,25,23,0.28)] transition duration-500 hover:rotate-0">
-                  <FrameTrip frame={heroFrame} sampleOffset={1} width={480} radius={2} />
-                </div>
-              </div>
-              <div className="w-[34%] shrink-0 rotate-[5deg] pb-8 drop-shadow-[0_18px_26px_rgba(28,25,23,0.22)] transition duration-500 hover:rotate-0">
-                <FrameTrip frame={heroSticker} sampleOffset={4} width={340} radius={2} filter="warm" />
-              </div>
+          {/* spesimen — gambar strip dikecilin, disusun kayak plat katalog cetak:
+              tinggi gambar dipatok, caption rata bawah di garis dasar yang sama. */}
+          <motion.div {...rise(0.34)} className="border-t border-line pt-8 pb-10">
+            <div className="flex items-baseline justify-between gap-4">
+              <p className="kicker">01 — spesimen bingkai</p>
+              <p className="hidden font-mono text-[9px] uppercase tracking-[0.16em] text-stone-soft sm:block">
+                skala 1:9
+              </p>
             </div>
-            <div className="mx-auto mt-6 flex w-fit items-center gap-2 rounded-full border border-line bg-milk/90 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-stone">
-              <span className="h-1 w-1 rounded-full bg-espresso/40" />
-              honey classic · 1200 × 3600 px
+
+            <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 sm:gap-x-8">
+              {specimen.map((item, i) => {
+                const frame = getFrame(item.id)
+                if (!frame) return null
+                return (
+                  <Link
+                    key={item.id}
+                    to={`/booth?frame=${item.id}`}
+                    className="group flex flex-col"
+                  >
+                    {/* Tinggi dipatok, lebar ngikutin rasio asli bingkai.
+                        Strip 4-cut jadi ramping, grid jadi lebar — persis katalog cetak. */}
+                    <div className="flex h-[10.5rem] items-end sm:h-[12rem]">
+                      <div
+                        className="transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1"
+                        style={{
+                          height: '100%',
+                          aspectRatio: `${frame.canvasWidth} / ${frame.canvasHeight}`,
+                          filter: 'drop-shadow(0 10px 16px rgba(28,25,23,0.18))',
+                        }}
+                      >
+                        <FrameTrip frame={frame} sampleOffset={i * 2} width={300} radius={1} />
+                      </div>
+                    </div>
+
+                    <div className="mt-3 border-t border-line pt-2.5">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <p className="font-serif text-[1rem] leading-tight text-espresso">{frame.title}</p>
+                        <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-stone-soft">
+                          0{i + 1}
+                        </span>
+                      </div>
+                      <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.13em] text-stone-soft">
+                        {item.note} · {frame.photoCount}×
+                      </p>
+                    </div>
+                  </Link>
+                )
+              })}
+
+              <Link
+                to="/booth"
+                className="group flex flex-col justify-end"
+              >
+                <div className="flex h-[9.5rem] items-end sm:h-[11rem]">
+                  <p className="max-w-[9rem] font-serif text-[1.15rem] leading-[1.25] text-stone transition group-hover:text-espresso">
+                    delapan bingkai, satu booth.
+                  </p>
+                </div>
+                <div className="mt-3 border-t border-line pt-2.5">
+                  <p className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.13em] text-stone transition group-hover:text-espresso">
+                    lihat semua
+                    <ArrowUpRight size={11} className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </p>
+                </div>
+              </Link>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* KATALOG */}
+      {/* ── KATALOG ─────────────────────────────────────────────────── */}
       <section id="bingkai" className="mx-auto max-w-6xl scroll-mt-20 px-5 py-16 sm:px-8 lg:py-24">
-        <div className="flex flex-col gap-6 border-b border-line pb-7 sm:flex-row sm:items-end sm:justify-between">
+        <div className="grid gap-6 border-b border-line pb-7 sm:grid-cols-[1fr_auto] sm:items-end sm:gap-10">
           <div>
-            <p className="kicker">katalog bingkai</p>
-            <h2 className="mt-3 max-w-lg font-serif text-[2.1rem] leading-[1.05] text-espresso sm:text-[2.8rem]">
+            <p className="kicker">02 — katalog bingkai</p>
+            <h2 className="title mt-3 max-w-xl">
               Bingkai yang bikin strip terasa <span className="italic">nyata</span>.
             </h2>
           </div>
-          <p className="max-w-xs text-[13px] leading-relaxed text-stone">
-            Tiap bingkai punya koordinat slot presisi — bukan tempelan gambar. Hasil export-nya sama
-            persis dengan preview.
+          <p className="max-w-[22rem] text-[13px] leading-[1.65] text-stone">
+            Enam bingkai bebas dipakai tanpa akun. Tiap bingkai punya koordinat slot presisi —
+            bukan tempelan gambar, jadi hasil export sama persis dengan preview.
           </p>
         </div>
 
-        <div className="no-scrollbar -mx-5 mt-6 flex gap-2 overflow-x-auto px-5 pb-1 sm:mx-0 sm:px-0">
+        {/* Di mobile pill-nya dibiarin wrap dua baris — lebih jujur daripada
+            scroll horizontal yang nggak ada tanda-tandanya. */}
+        <div className="mt-6 flex flex-wrap gap-2">
           {categories.map((cat) => {
-            const count = cat === 'Semua' ? frames.length : frames.filter((f) => f.categoryLabel === cat).length
+            const count =
+              cat === 'Semua'
+                ? freeFrames.length
+                : freeFrames.filter((f) => f.categoryLabel === cat).length
             const selected = active === cat
             return (
               <button
@@ -182,69 +258,127 @@ export function Landing() {
         </div>
       </section>
 
-      {/* CARA KERJA */}
-      <section className="border-y border-line bg-[#F7F2E7]">
+
+      {/* ── KOLEKSI ─────────────────────────────────────────────────────
+          Section ini menjawab satu pertanyaan: "kok ada yang dikunci?"
+          Jawabannya bukan paywall — dan itu ditulis apa adanya. */}
+      <section id="koleksi" className="border-t border-line bg-[#F7F2E7]">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:py-20">
-          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-            <div>
-              <p className="kicker">cara kerja</p>
-              <h2 className="mt-3 font-serif text-[2.1rem] leading-[1.06] text-espresso sm:text-[2.6rem]">
-                Tiga langkah, nggak ada ribet.
+          <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+            <div className="lg:col-span-5">
+              <p className="kicker">03 — koleksi</p>
+              <h2 className="title mt-3">
+                Dua bingkai yang minta <span className="italic">alamat</span>.
               </h2>
-              <p className="mt-4 max-w-sm text-[13.5px] leading-relaxed text-stone">
-                Semua proses — kamera, filter, komposisi, kompresi — jalan di gawai kamu. Server cuma
-                dipakai kalau kamu mau simpan ke akun.
+              <p className="mt-4 max-w-[34ch] text-[13.5px] leading-[1.7] text-stone">
+                Nggak ada paket, nggak ada langganan, nggak ada tombol bayar. Bingkai Koleksi
+                cuma butuh akun — supaya strip-nya punya tempat pulang dan bisa kamu buka lagi
+                dari HP lain.
               </p>
-              <Link to="/booth" className="btn btn-honey mt-6">
-                Coba booth sekarang
-                <ArrowRight size={15} />
-              </Link>
+
+              <dl className="mt-7 divide-y divide-line border-y border-line">
+                {[
+                  ['6 bingkai bebas', 'tanpa akun, unduh sepuasnya'],
+                  ['2 bingkai koleksi', 'butuh akun, bukan bayar'],
+                  ['galeri cloud', '±200 KB per strip, privat'],
+                ].map(([t, v]) => (
+                  <div key={t} className="flex items-baseline justify-between gap-4 py-3">
+                    <dt className="text-[12.5px] text-espresso">{t}</dt>
+                    <dd className="font-mono text-[10px] uppercase tracking-[0.1em] text-stone-soft">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+
+              <div className="mt-7 flex flex-wrap gap-2">
+                <Link to="/masuk?mode=daftar" className="btn btn-dark">
+                  Bikin akun gratis
+                  <ArrowRight size={15} />
+                </Link>
+                <Link to="/masuk" className="btn btn-ghost">
+                  Udah punya akun
+                </Link>
+              </div>
             </div>
 
-            <ol className="grid gap-4 sm:grid-cols-1">
-              {steps.map((step, i) => (
-                <li
-                  key={step.title}
-                  className="flex gap-4 rounded-xl border border-line bg-milk/70 p-5 transition hover:border-line-strong hover:bg-milk"
-                >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-line bg-cream">
-                    <step.icon size={17} className="text-espresso" strokeWidth={1.6} />
-                  </div>
-                  <div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="font-mono text-[10px] text-stone-soft">0{i + 1}</span>
-                      <h3 className="font-serif text-xl text-espresso">{step.title}</h3>
-                    </div>
-                    <p className="mt-1 text-[13px] leading-relaxed text-stone">{step.body}</p>
-                  </div>
-                </li>
+            <div className="grid gap-5 sm:grid-cols-2 lg:col-span-6 lg:col-start-7">
+              {collectionFrames.map((frame) => (
+                <FrameCard
+                  key={frame.id}
+                  frame={frame}
+                  index={frames.findIndex((f) => f.id === frame.id)}
+                />
               ))}
-            </ol>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:py-20">
-        <div className="relative overflow-hidden rounded-2xl border border-espresso/10 bg-slate-deep px-6 py-12 text-cream sm:px-12">
+      {/* ── CARA KERJA ──────────────────────────────────────────────── */}
+      <section className="border-y border-line bg-[#F7F2E7]">
+        <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 lg:py-20">
+          <p className="kicker">04 — cara kerja</p>
+
+          <div className="mt-3 grid gap-8 lg:grid-cols-12 lg:gap-10">
+            <h2 className="title lg:col-span-5">
+              Tiga langkah,
+              <br />
+              nggak ada <span className="italic">ribet</span>.
+            </h2>
+            <p className="body-copy self-end text-[14px] lg:col-span-5 lg:col-start-8">
+              Kamera, filter, komposisi, kompresi — semuanya jalan di gawai kamu. Server cuma
+              kepake kalau kamu sendiri yang mau simpan ke akun.
+            </p>
+          </div>
+
+          {/* Daftar bergaris, bukan tiga kartu sejajar. Lebih tenang dibaca. */}
+          <ol className="mt-10 divide-y divide-line border-y border-line">
+            {steps.map((step, i) => (
+              <li key={step.title} className="group grid gap-3 py-7 sm:grid-cols-[auto_1fr_auto] sm:items-baseline sm:gap-6">
+                <span className="font-mono text-[10px] tracking-[0.16em] text-stone-soft">0{i + 1}</span>
+                <div className="max-w-xl">
+                  <h3 className="heading">
+                    <span className="mr-2 inline-block align-middle text-stone-soft">
+                      <step.icon size={16} strokeWidth={1.5} className="inline" />
+                    </span>
+                    {step.title}
+                  </h3>
+                  <p className="mt-1.5 text-[13.5px] leading-[1.65] text-stone">{step.body}</p>
+                </div>
+                <ArrowUpRight
+                  size={16}
+                  className="hidden text-stone-soft transition group-hover:text-espresso sm:block"
+                />
+              </li>
+            ))}
+          </ol>
+
+          <Link to="/booth" className="btn btn-honey mt-8">
+            Coba booth sekarang
+            <ArrowRight size={15} />
+          </Link>
+        </div>
+      </section>
+
+      {/* ── CTA ─────────────────────────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8 lg:py-20">
+        <div className="relative overflow-hidden rounded-xl border border-espresso/10 bg-slate-deep px-6 py-14 text-cream sm:px-12">
           <div
-            className="pointer-events-none absolute inset-0 opacity-[0.18]"
+            className="pointer-events-none absolute inset-0 opacity-[0.16]"
             style={{
               backgroundImage: 'radial-gradient(rgba(251,191,36,0.5) 0.6px, transparent 0.7px)',
               backgroundSize: '6px 6px',
             }}
           />
-          <div className="relative flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center">
+          <div className="relative grid gap-8 sm:grid-cols-[1fr_auto] sm:items-end">
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cream/50">gratis, selamanya</p>
-              <h2 className="mt-3 max-w-md font-serif text-[2rem] leading-[1.06] sm:text-[2.5rem]">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cream/45">
+                gratis, selamanya
+              </p>
+              <h2 className="mt-4 max-w-[24ch] font-serif text-[clamp(1.9rem,3.4vw,2.75rem)] leading-[1.02] tracking-[-0.02em] text-cream">
                 Siapin pose terbaikmu. Sisanya maybee yang urus.
               </h2>
             </div>
-            <Link
-              to="/booth"
-              className="btn shrink-0 bg-cream text-espresso hover:bg-white"
-            >
+            <Link to="/booth" className="btn shrink-0 bg-cream text-espresso hover:bg-white">
               Buka booth
               <ArrowRight size={15} />
             </Link>

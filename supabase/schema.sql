@@ -68,6 +68,8 @@ create table if not exists public.frames (
   canvas_width integer not null,
   canvas_height integer not null,
   slots_data jsonb not null default '[]'::jsonb,
+  -- 'bebas' = bisa dipakai tanpa akun, 'koleksi' = butuh akun (bukan bayar)
+  akses text not null default 'bebas' check (akses in ('bebas', 'koleksi')),
   is_active boolean not null default true,
   created_at timestamptz not null default now()
 );
@@ -156,27 +158,34 @@ create policy "gallery: hapus milik sendiri"
 -- ---------------------------------------------------------------------------
 -- 5. SEED katalog awal (sesuai src/data/frames.json)
 -- ---------------------------------------------------------------------------
-insert into public.frames (id, title, category, overlay_url, canvas_width, canvas_height, slots_data)
+insert into public.frames (id, title, category, overlay_url, canvas_width, canvas_height, slots_data, akses)
 values
-  ('honey-classic',  'Honey Classic',  'strip',     '/frames/honey-classic.png',  1200, 3600, '[{"index":1},{"index":2},{"index":3},{"index":4}]'::jsonb),
-  ('midnight-seoul', 'Midnight Seoul', 'strip',     '/frames/midnight-seoul.png', 1200, 3600, '[{"index":1},{"index":2},{"index":3},{"index":4}]'::jsonb),
-  ('sage-morning',   'Sage Morning',   'strip',     '/frames/sage-morning.png',   1200, 3600, '[{"index":1},{"index":2},{"index":3},{"index":4}]'::jsonb),
-  ('honey-trio',     'Honey Trio',     'strip',     '/frames/honey-trio.png',     1200, 3000, '[{"index":1},{"index":2},{"index":3}]'::jsonb),
-  ('butter-grid',    'Butter Grid',    'grid',      '/frames/butter-grid.png',    2400, 3000, '[{"index":1},{"index":2},{"index":3},{"index":4}]'::jsonb),
-  ('polaroid-duo',   'Polaroid Duo',   'polaroid',  '/frames/polaroid-duo.png',   1200, 1800, '[{"index":1},{"index":2}]'::jsonb)
+  ('honey-classic',  'Honey Classic',  'strip',     '/frames/honey-classic.png',  1200, 3600, '[{"index":1},{"index":2},{"index":3},{"index":4}]'::jsonb, 'bebas'),
+  ('midnight-seoul', 'Midnight Seoul', 'strip',     '/frames/midnight-seoul.png', 1200, 3600, '[{"index":1},{"index":2},{"index":3},{"index":4}]'::jsonb, 'bebas'),
+  ('sage-morning',   'Sage Morning',   'strip',     '/frames/sage-morning.png',   1200, 3600, '[{"index":1},{"index":2},{"index":3},{"index":4}]'::jsonb, 'bebas'),
+  ('honey-trio',     'Honey Trio',     'strip',     '/frames/honey-trio.png',     1200, 3000, '[{"index":1},{"index":2},{"index":3}]'::jsonb, 'bebas'),
+  ('butter-grid',    'Butter Grid',    'grid',      '/frames/butter-grid.png',    2400, 3000, '[{"index":1},{"index":2},{"index":3},{"index":4}]'::jsonb, 'bebas'),
+  ('polaroid-duo',   'Polaroid Duo',   'polaroid',  '/frames/polaroid-duo.png',   1200, 1800, '[{"index":1},{"index":2}]'::jsonb, 'bebas'),
+  ('linen-arch',     'Linen Arch',     'strip',     '/frames/linen-arch.png',     1200, 3600, '[{"index":1},{"index":2},{"index":3},{"index":4}]'::jsonb, 'koleksi'),
+  ('amber-grid',     'Amber Room',     'grid',      '/frames/amber-grid.png',     2400, 3000, '[{"index":1},{"index":2},{"index":3},{"index":4}]'::jsonb, 'koleksi')
 on conflict (id) do update
   set title = excluded.title,
       category = excluded.category,
       overlay_url = excluded.overlay_url,
       canvas_width = excluded.canvas_width,
       canvas_height = excluded.canvas_height,
-      slots_data = excluded.slots_data;
+      slots_data = excluded.slots_data,
+      akses = excluded.akses;
 
 -- ---------------------------------------------------------------------------
 -- Catatan operasional
 -- ---------------------------------------------------------------------------
 -- 1. Auth → Providers: aktifkan Google. Redirect URL:
 --    http://localhost:5173/galeri  dan  https://domain-maybee/galeri
+--    Email/password jalan tanpa konfigurasi tambahan. Kalau "Confirm email"
+--    dimatikan, user langsung dapat sesi setelah daftar. Kalau nyala, app
+--    nampilin pesan "cek inbox" (sudah ditangani di /masuk).
+--    Redirect URL reset password: http://localhost:5173/masuk?mode=reset
 -- 2. Auth → URL Configuration → Site URL: domain produksi DomaiNesia.
 -- 3. Free tier Supabase cuma 1 GB storage; 1 strip ~200 KB → ±5.000 strip.
 --    Kalau mulai penuh, hapus strip lama lewat galeri (user bisa hapus sendiri).

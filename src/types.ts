@@ -1,5 +1,13 @@
 export type FrameType = 'strip' | 'grid' | 'polaroid'
 
+/**
+ * Tingkat akses bingkai.
+ *  bebas   - bisa dipakai tanpa akun, termasuk unduh.
+ *  koleksi - butuh akun buat dipakai. Bukan paywall: nggak ada pembayaran,
+ *            yang ditukar cuma "punya arsip" (akun), bukan uang.
+ */
+export type FrameAccess = 'bebas' | 'koleksi'
+
 export interface FrameSlot {
   index: number
   x: number
@@ -22,6 +30,7 @@ export interface Frame {
   title: string
   tagline: string
   type: FrameType
+  akses: FrameAccess
   categoryLabel: string
   canvasWidth: number
   canvasHeight: number

@@ -12,3 +12,19 @@ export function getFrame(id: string | undefined): Frame | undefined {
 export function sampleFor(index: number, offset = 0): string {
   return `/samples/pose-${((index + offset) % 6) + 1}.jpg`
 }
+
+/** Bingkai yang bisa dipakai tanpa akun. */
+export const freeFrames = frames.filter((f) => f.akses === 'bebas')
+
+/** Bingkai Koleksi — butuh akun buat dipakai. */
+export const collectionFrames = frames.filter((f) => f.akses === 'koleksi')
+
+/**
+ * Satu-satunya tempat aturan akses diputuskan. Dipakai kartu katalog,
+ * halaman booth, dan gate simpan — biar nggak ada tiga versi aturan
+ * yang gampang beda sendiri.
+ */
+export function isFrameUnlocked(frame: Frame | undefined, hasAccount: boolean): boolean {
+  if (!frame) return false
+  return frame.akses === 'bebas' || hasAccount
+}

@@ -121,9 +121,25 @@ export function CameraStage({
                 <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20">
                   <Camera size={18} className="text-white/70" strokeWidth={1.5} />
                 </div>
+                {error?.title && (
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/45">{error.title}</p>
+                )}
                 <p className="max-w-sm text-[13px] leading-relaxed text-white/70">
                   {error?.message ?? 'Kamera belum aktif.'}
                 </p>
+                {error?.hint && (
+                  <p className="max-w-sm text-[11.5px] leading-relaxed text-white/40">{error.hint}</p>
+                )}
+                {error?.steps && error.steps.length > 0 && (
+                  <ol className="max-w-sm space-y-1 text-left text-[11px] leading-relaxed text-white/45">
+                    {error.steps.map((step, i) => (
+                      <li key={i} className="flex gap-2">
+                        <span className="font-mono text-white/30">{String(i + 1).padStart(2, '0')}</span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                )}
                 <div className="flex flex-wrap justify-center gap-2">
                   <button type="button" onClick={onRetry} className="btn btn-honey !py-2 !text-[12px]">
                     <RefreshCw size={14} /> Coba lagi
@@ -172,7 +188,11 @@ export function CameraStage({
 
       <div className="mt-3 flex items-center justify-between gap-3">
         <p className="hidden font-mono text-[10px] uppercase tracking-[0.14em] text-stone-soft sm:block">
-          {live ? 'posisikan wajah di dalam bingkai' : 'kamera belum siap'}
+          {live
+            ? 'posisikan wajah di dalam bingkai'
+            : status === 'requesting' || status === 'idle'
+              ? 'menyalakan kamera'
+              : 'kamera belum siap'}
         </p>
         <div className="flex w-full items-center gap-2 sm:w-auto">
           <button

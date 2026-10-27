@@ -9,10 +9,26 @@ import { Auth } from './pages/Auth'
 import { About } from './pages/About'
 
 function ScrollToTop() {
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
   useEffect(() => {
+    // Link seperti "/#bingkai" harus lompat ke section-nya, bukan ke atas.
+    // Tanpa ini, orang yang klik "Bingkai" dari /booth mendarat di hero
+    // dan merasa katalognya hilang.
+    if (hash) {
+      const id = hash.slice(1)
+      // tunggu route baru ter-render dulu sebelum nyari elemennya
+      const raf = requestAnimationFrame(() => {
+        const el = document.getElementById(id)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        } else {
+          window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
+        }
+      })
+      return () => cancelAnimationFrame(raf)
+    }
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
-  }, [pathname])
+  }, [pathname, hash])
   return null
 }
 

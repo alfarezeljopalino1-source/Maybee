@@ -20,6 +20,14 @@
   --shadow-lift: 0 2px 4px rgba(28, 25, 23, 0.04), 0 30px 60px -28px rgba(28, 25, 23, 0.32);
 
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Skala tipografi fluid. Ukuran nempel ke lebar layar, bukan lompat di breakpoint. */
+  --text-display: clamp(2.6rem, 7.4vw, 5rem);
+  --text-title: clamp(1.85rem, 3.6vw, 2.75rem);
+  --text-heading: clamp(1.3rem, 2.1vw, 1.6rem);
+  --text-lede: clamp(1.02rem, 1.15vw, 1.15rem);
+  --text-body: 0.9375rem;
+  --text-micro: 0.6875rem;
 }
 
 @layer base {
@@ -85,6 +93,111 @@
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-stone);
+  }
+
+  /* --- Tipografi editorial -------------------------------------------------
+     Headline serif dibuat lebih rapat & seimbang, body text dikasih measure
+     yang enak dibaca (55-70 karakter), bukan selebar container. */
+
+  .display {
+    font-family: var(--font-serif);
+    font-size: var(--text-display);
+    line-height: 0.94;
+    letter-spacing: -0.028em;
+    font-weight: 400;
+    color: var(--color-espresso);
+    text-wrap: balance;
+    /* italic Instrument Serif punya overshoot kiri yang bikin baris berasa geser */
+    padding-left: 0.02em;
+  }
+
+  .title {
+    font-family: var(--font-serif);
+    font-size: var(--text-title);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--color-espresso);
+    text-wrap: balance;
+  }
+
+  .heading {
+    font-family: var(--font-serif);
+    font-size: var(--text-heading);
+    line-height: 1.15;
+    letter-spacing: -0.012em;
+    color: var(--color-espresso);
+    text-wrap: balance;
+  }
+
+  .lede {
+    font-size: var(--text-lede);
+    line-height: 1.62;
+    letter-spacing: -0.005em;
+    color: var(--color-stone);
+    max-width: 34rem;
+    text-wrap: pretty;
+  }
+
+  .body-copy {
+    font-size: var(--text-body);
+    line-height: 1.68;
+    color: var(--color-stone);
+    max-width: 32rem;
+    text-wrap: pretty;
+  }
+
+  .micro {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-stone-soft);
+  }
+
+  /* Drop cap buat paragraf pembuka — satu-satunya ornamen, sisanya biar teks bicara. */
+  /* Drop cap: tingginya harus kelipatan pas dari line-height paragraf,
+     kalau nggak baseline-nya melayang. Body 15px x 1.72 = 25.8px/baris,
+     jadi 2 baris = 51.6px -> 3.2em x 1.07 = 51.4px. */
+  .dropcap::first-letter {
+    float: left;
+    font-family: var(--font-serif);
+    font-size: 3.2em;
+    line-height: 1.07;
+    padding: 0 0.09em 0 0;
+    color: var(--color-espresso);
+  }
+
+  @media (min-width: 640px) {
+    .dropcap::first-letter {
+      font-size: 3.45em;
+      line-height: 1;
+    }
+  }
+
+  /* Aksen garis bawah tipis di bawah kata kunci, bukan highlight blok. */
+  .mark {
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .mark::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.06em;
+    height: 2px;
+    background: var(--color-honey);
+    opacity: 0.85;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: mark-draw 0.9s var(--ease-soft) 0.6s forwards;
+  }
+
+  @keyframes mark-draw {
+    to {
+      transform: scaleX(1);
+    }
   }
 
   .sheet {
