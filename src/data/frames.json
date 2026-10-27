@@ -1,0 +1,308 @@
+[
+  {
+    "id": "honey-classic",
+    "title": "Honey Classic",
+    "tagline": "Empat potret, satu kertas madu.",
+    "type": "strip",
+    "categoryLabel": "Classic 4-Cut",
+    "canvasWidth": 1200,
+    "canvasHeight": 3600,
+    "defaultBgColor": "#FBF6EC",
+    "accentColor": "#E0AE4E",
+    "inkColor": "#2A241E",
+    "slots": [
+      {
+        "index": 1,
+        "x": 100,
+        "y": 180,
+        "width": 1000,
+        "height": 750,
+        "radius": 0
+      },
+      {
+        "index": 2,
+        "x": 100,
+        "y": 980,
+        "width": 1000,
+        "height": 750,
+        "radius": 0
+      },
+      {
+        "index": 3,
+        "x": 100,
+        "y": 1780,
+        "width": 1000,
+        "height": 750,
+        "radius": 0
+      },
+      {
+        "index": 4,
+        "x": 100,
+        "y": 2580,
+        "width": 1000,
+        "height": 750,
+        "radius": 0
+      }
+    ],
+    "captionBox": {
+      "x": 100,
+      "y": 3360,
+      "width": 1000,
+      "height": 140,
+      "align": "left"
+    },
+    "overlayUrl": "/frames/honey-classic.png",
+    "photoCount": 4
+  },
+  {
+    "id": "midnight-seoul",
+    "title": "Midnight Seoul",
+    "tagline": "Hitam pekat ala bilik foto Seoul.",
+    "type": "strip",
+    "categoryLabel": "Classic 4-Cut",
+    "canvasWidth": 1200,
+    "canvasHeight": 3600,
+    "defaultBgColor": "#17130F",
+    "accentColor": "#E8C27A",
+    "inkColor": "#F4EADA",
+    "slots": [
+      {
+        "index": 1,
+        "x": 100,
+        "y": 180,
+        "width": 1000,
+        "height": 750,
+        "radius": 0
+      },
+      {
+        "index": 2,
+        "x": 100,
+        "y": 980,
+        "width": 1000,
+        "height": 750,
+        "radius": 0
+      },
+      {
+        "index": 3,
+        "x": 100,
+        "y": 1780,
+        "width": 1000,
+        "height": 750,
+        "radius": 0
+      },
+      {
+        "index": 4,
+        "x": 100,
+        "y": 2580,
+        "width": 1000,
+        "height": 750,
+        "radius": 0
+      }
+    ],
+    "captionBox": {
+      "x": 100,
+      "y": 3360,
+      "width": 1000,
+      "height": 140,
+      "align": "left"
+    },
+    "overlayUrl": "/frames/midnight-seoul.png",
+    "photoCount": 4
+  },
+  {
+    "id": "sage-morning",
+    "title": "Sage Morning",
+    "tagline": "Hijau tenang buat pagi yang pelan.",
+    "type": "strip",
+    "categoryLabel": "Classic 4-Cut",
+    "canvasWidth": 1200,
+    "canvasHeight": 3600,
+    "defaultBgColor": "#EAEDE2",
+    "accentColor": "#8FA37F",
+    "inkColor": "#2B3226",
+    "slots": [
+      {
+        "index": 1,
+        "x": 100,
+        "y": 180,
+        "width": 1000,
+        "height": 750,
+        "radius": 0
+      },
+      {
+        "index": 2,
+        "x": 100,
+        "y": 980,
+        "width": 1000,
+        "height": 750,
+        "radius": 0
+      },
+      {
+        "index": 3,
+        "x": 100,
+        "y": 1780,
+        "width": 1000,
+        "height": 750,
+        "radius": 0
+      },
+      {
+        "index": 4,
+        "x": 100,
+        "y": 2580,
+        "width": 1000,
+        "height": 750,
+        "radius": 0
+      }
+    ],
+    "captionBox": {
+      "x": 100,
+      "y": 3360,
+      "width": 1000,
+      "height": 140,
+      "align": "left"
+    },
+    "overlayUrl": "/frames/sage-morning.png",
+    "photoCount": 4
+  },
+  {
+    "id": "honey-trio",
+    "title": "Honey Trio",
+    "tagline": "Tiga pose, ruang napas lebih lega.",
+    "type": "strip",
+    "categoryLabel": "Classic 3-Cut",
+    "canvasWidth": 1200,
+    "canvasHeight": 3000,
+    "defaultBgColor": "#FBF6EC",
+    "accentColor": "#E0AE4E",
+    "inkColor": "#2A241E",
+    "slots": [
+      {
+        "index": 1,
+        "x": 100,
+        "y": 200,
+        "width": 1000,
+        "height": 780,
+        "radius": 0
+      },
+      {
+        "index": 2,
+        "x": 100,
+        "y": 1040,
+        "width": 1000,
+        "height": 780,
+        "radius": 0
+      },
+      {
+        "index": 3,
+        "x": 100,
+        "y": 1880,
+        "width": 1000,
+        "height": 780,
+        "radius": 0
+      }
+    ],
+    "captionBox": {
+      "x": 100,
+      "y": 2720,
+      "width": 1000,
+      "height": 150,
+      "align": "left"
+    },
+    "overlayUrl": "/frames/honey-trio.png",
+    "photoCount": 3
+  },
+  {
+    "id": "butter-grid",
+    "title": "Butter Grid",
+    "tagline": "Empat jepretan jadi satu lembar 4R.",
+    "type": "grid",
+    "categoryLabel": "2x2 Grid",
+    "canvasWidth": 2400,
+    "canvasHeight": 3000,
+    "defaultBgColor": "#FDF6E4",
+    "accentColor": "#D9A441",
+    "inkColor": "#2A241E",
+    "slots": [
+      {
+        "index": 1,
+        "x": 160,
+        "y": 180,
+        "width": 1000,
+        "height": 1000,
+        "radius": 8
+      },
+      {
+        "index": 2,
+        "x": 1240,
+        "y": 180,
+        "width": 1000,
+        "height": 1000,
+        "radius": 8
+      },
+      {
+        "index": 3,
+        "x": 160,
+        "y": 1260,
+        "width": 1000,
+        "height": 1000,
+        "radius": 8
+      },
+      {
+        "index": 4,
+        "x": 1240,
+        "y": 1260,
+        "width": 1000,
+        "height": 1000,
+        "radius": 8
+      }
+    ],
+    "captionBox": {
+      "x": 160,
+      "y": 2340,
+      "width": 2080,
+      "height": 160,
+      "align": "left"
+    },
+    "overlayUrl": "/frames/butter-grid.png",
+    "photoCount": 4
+  },
+  {
+    "id": "polaroid-duo",
+    "title": "Polaroid Duo",
+    "tagline": "Dua bingkai lebar, margin tebal.",
+    "type": "polaroid",
+    "categoryLabel": "Polaroid / Wide",
+    "canvasWidth": 1200,
+    "canvasHeight": 1800,
+    "defaultBgColor": "#FFFDF8",
+    "accentColor": "#C9A227",
+    "inkColor": "#2A241E",
+    "slots": [
+      {
+        "index": 1,
+        "x": 100,
+        "y": 120,
+        "width": 1000,
+        "height": 680,
+        "radius": 0
+      },
+      {
+        "index": 2,
+        "x": 100,
+        "y": 860,
+        "width": 1000,
+        "height": 680,
+        "radius": 0
+      }
+    ],
+    "captionBox": {
+      "x": 100,
+      "y": 1556,
+      "width": 720,
+      "height": 150,
+      "align": "left"
+    },
+    "overlayUrl": "/frames/polaroid-duo.png",
+    "photoCount": 2
+  }
+]
